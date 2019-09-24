@@ -9,6 +9,7 @@ project(assignment3)
 # Make SURE to use -std=c11 and -std=c++11 where relevant.
 # The options specified below are required, but additional options
 #  may be used.
+
 set(CMAKE_C_FLAGS "-std=c11 -Wall -Wextra -Wshadow -Wno-error")
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -Wshadow -Wno-error")
 

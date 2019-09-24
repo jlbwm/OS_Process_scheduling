@@ -32,8 +32,6 @@ class GradeEnvironment : public testing::Environment {
         }
 };
 
-
-
 /*
  * * ROUND ROBIN TEST CASES
  * */
@@ -378,7 +376,7 @@ TEST (load_process_control_blocks, fullFoundFile) {
     uint32_t pcbs[NUM_PCB][3];
     for (uint32_t p = 0; p < pcb_num; ++p) {
         pcbs[p][0] = rand() % 35 + 1;
-//        printf("%d, ", pcbs[p][0]);
+        // printf("%d, ", pcbs[p][0]);
         pcbs[p][1] = p;
         pcbs[p][2] = p;
     }
@@ -388,7 +386,8 @@ TEST (load_process_control_blocks, fullFoundFile) {
     write(fd,&pcb_num,sizeof(uint32_t));
     write(fd,pcbs,pcb_num * sizeof(uint32_t)*3);
     close(fd);
-    dyn_array_t* da = load_process_control_blocks (fname);
+    
+    dyn_array_t* da = load_process_control_blocks(fname);
     ASSERT_NE(da, (dyn_array_t*) NULL);
     for (size_t i = 0; i < dyn_array_size(da); ++i) {
         ProcessControlBlock_t * pPCB = (ProcessControlBlock_t *)dyn_array_at(da, i);
