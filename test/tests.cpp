@@ -75,9 +75,9 @@ TEST (round_robin, goodInputA) {
     bool res = round_robin (pcbs,sr,QUANTUM);	
     ASSERT_EQ(true,res);
     float answers[3] = {15.666667,5.666667,30};
-    ASSERT_FLOAT_EQ(answers[0],sr->average_turnaround_time);
-    ASSERT_FLOAT_EQ(answers[1],sr->average_waiting_time);
     ASSERT_EQ(answers[2],sr->total_run_time);
+    ASSERT_FLOAT_EQ(answers[1],sr->average_waiting_time);
+    ASSERT_FLOAT_EQ(answers[0],sr->average_turnaround_time);
     dyn_array_destroy(pcbs);
     delete sr;
 
@@ -101,9 +101,9 @@ TEST (round_robin, goodInputB) {
     bool res = round_robin (pcbs,sr,QUANTUM);	
     ASSERT_EQ(true,res);
     float answers[3] = {22.333334,12,31};
-    ASSERT_FLOAT_EQ(answers[0],sr->average_turnaround_time);
-    ASSERT_EQ(answers[1],sr->average_waiting_time);
     ASSERT_EQ(answers[2],sr->total_run_time);
+    ASSERT_EQ(answers[1],sr->average_waiting_time);
+    ASSERT_FLOAT_EQ(answers[0],sr->average_turnaround_time);
     dyn_array_destroy(pcbs);
     delete sr;
 
@@ -313,7 +313,7 @@ TEST (shortest_remaining_time_first, goodInput) {
     dyn_array_push_back(pcbs,&data[0]);	
     bool res = shortest_remaining_time_first (pcbs,sr);	
     ASSERT_EQ(true,res);
-    float answers[3] = {11.75,2.5,32};
+    float answers[3] = {10.25,2.25,32};
     ASSERT_EQ(answers[0],sr->average_turnaround_time);
     ASSERT_EQ(answers[1],sr->average_waiting_time);
     ASSERT_EQ(answers[2],sr->total_run_time);

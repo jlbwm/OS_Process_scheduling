@@ -2,16 +2,18 @@
 
 Milestone 0: 
 CMake - Sep 15
-Unit Testing filled out Sep 19
-Due: Friday, September 20, 2019 11:59 PM
+Unit Testing - Sep 19
 
 Milestone 1: 
-PCB file loading Sep 24
-First Come, First Served  Sep 24
-Due: Friday, September 27, 2019 11:59 PM
+PCB file loading - Sep 24
+First Come, First Served - Sep 24
 
-Milestone 2: Priority scheduling, Round Robin, and analysis of algorithms 
-Due: Friday, October 4, 2019 11:59 PM
+Milestone 2: 
+Priority scheduling - Oct 2 
+Round Robin Oct - 2
+shortest_job_first
+analysis of algorithms
+
 
 Note: 
 1. After you run assignment3_test, the PCBs.bin will be created in the ./test directory.
