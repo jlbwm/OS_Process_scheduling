@@ -31,6 +31,9 @@ int is_valid(const char* alg) {
     if (!strcmp(RR, alg)) {
         return 3;
     }
+    if (!strcmp(SJF, alg)) {
+        return 4;
+    }
     return -1;
 }
 
@@ -106,6 +109,13 @@ int main(int argc, char **argv) {
             }
         } else {
             fprintf(stderr, "Error Quantum Input\n");
+        }
+    }
+    if (status == 4) {
+        if (shortest_remaining_time_first(ready_queue, &sr)) {
+            execute_and_print(schedule_algo, sr);
+        } else {
+            execute_error(schedule_algo);
         }
     }
 

@@ -1,18 +1,18 @@
 # Assignment 3
 
 Milestone 0: 
-CMake - Sep 15
-Unit Testing - Sep 19
+- CMake - Sep 15
+- Unit Testing - Sep 19
 
 Milestone 1: 
-PCB file loading - Sep 24
-First Come, First Served - Sep 24
+- PCB file loading - Sep 24
+- First Come, First Served - Sep 24
 
 Milestone 2: 
-Priority scheduling - Oct 2 
-Round Robin - Oct 2
-shortest_job_first
-analysis of algorithms - Oct 2
+- Priority scheduling - Oct 2 
+- Round Robin - Oct 2
+- Shortest_remaining_time_first - Oct 5
+- Analysis of algorithms - Oct 5
 
 # Time Analysis
 Scheduling Algorithm: FCFS:
@@ -31,7 +31,10 @@ Scheduling Algorithm: RR
 - Average Waiting Time: 206.633331
 - Total Run Time: 407
 
-
+Scheduling Algorithm: SJF
+- Average Turnaround Time: 117.699997
+- Average Waiting Time: 104.133331
+- Total Run Time: 407
 
 
 # CMAKE

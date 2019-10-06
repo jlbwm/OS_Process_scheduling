@@ -30,7 +30,7 @@ target_link_libraries(analysis dyn_array)
 add_executable(${PROJECT_NAME}_test test/tests.cpp src/process_scheduling.c)
 
 # Enable grad/bonus tests by setting the variable to 1
-target_compile_definitions(${PROJECT_NAME}_test PRIVATE GRAD_TESTS=0)
+target_compile_definitions(${PROJECT_NAME}_test PRIVATE GRAD_TESTS=1)
 
 # Link ${PROJECT_NAME}_test with dyn_array and gtest and pthread libraries
 target_link_libraries(${PROJECT_NAME}_test gtest pthread dyn_array)

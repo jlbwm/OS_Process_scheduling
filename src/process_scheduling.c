@@ -14,6 +14,12 @@ void virtual_cpu(ProcessControlBlock_t *process_control_block) {
     --process_control_block->remaining_burst_time;
 }
 
+void print_dyn_array(dyn_array_t* array) {
+    for (size_t i = 0; i < dyn_array_size(array); i++) {
+        ProcessControlBlock_t* pcb = dyn_array_at(array, i);
+        printf("%zd: time: %d, arrival: %d\n", i, pcb->remaining_burst_time, pcb->arrival);
+    }
+}
 /*
     typedef struct
     {
@@ -242,65 +248,106 @@ dyn_array_t *load_process_control_blocks(const char *input_file) {
     return ready_queue;
 }
 
-int burst_and_arrival_comparator(const void *a, const void *b) {
-    if (((ProcessControlBlock_t *)a)->remaining_burst_time == ((ProcessControlBlock_t *)b)->remaining_burst_time) {
-        return ((ProcessControlBlock_t *)a)->arrival - ((ProcessControlBlock_t *)b)->arrival;
-    }
+int time_comparator(const void *a, const void *b) {
     return ((ProcessControlBlock_t *)a)->remaining_burst_time - ((ProcessControlBlock_t *)b)->remaining_burst_time;
 }
 
+int arrival_comparator(const void *a, const void *b) {
+    uint32_t a_time = ((ProcessControlBlock_t *)a)->arrival;
+    uint32_t b_time = ((ProcessControlBlock_t *)b)->arrival;
+    if (a_time == b_time) {
+        return ((ProcessControlBlock_t *)b)->remaining_burst_time - ((ProcessControlBlock_t *)a)->remaining_burst_time;
+    }
+    return b_time - a_time;
+}
 
-bool shortest_job_first(dyn_array_t *ready_queue, ScheduleResult_t *result) {
+void offer_avaliable_pcb_and_sort_by_time(dyn_array_t* ready_queue, dyn_array_t* wait_queue, uint32_t current_run_time) {
+    offer_avaliable_pcb(ready_queue, wait_queue, current_run_time);
+    dyn_array_sort(wait_queue, time_comparator);
+}
+
+bool shortest_remaining_time_first(dyn_array_t *ready_queue, ScheduleResult_t *result) {
     if (ready_queue == NULL || result == NULL) {
         return false;
     }
-    // size_t total_pcb = dyn_array_size(ready_queue);
-    // uint32_t current_run_time = 0;
-    // uint32_t total_completion_time = 0;
-    // uint32_t total_waiting_time = 0;
+    size_t total_pcb = dyn_array_size(ready_queue);
 
-    // while (dyn_array_size(ready_queue) != 0) {
-    //     ProcessControlBlock_t curt_pcb;
-    //     dyn_array_sort(ready_queue, burst_and_arrival_comparator);
+    // get each pcb's initial arrival time to help calculate the turnaround time
+    // tounaround time = finish time - initial arrival time
+    // since SRTF don't use priority, we use priority to store the initial arrival time
+    for (size_t i = 0; i < total_pcb; i++) {
+        ProcessControlBlock_t *pcb = (ProcessControlBlock_t *)dyn_array_at(ready_queue, i);
+        pcb->priority = pcb->arrival;
+    }
 
-    //     if (dyn_array_size(ready_queue) == 1) {
+    dyn_array_t *wait_queue = dyn_array_create(0, sizeof(ProcessControlBlock_t), NULL);
 
-    //         dyn_array_extract_front(ready_queue, &curt_pcb);
-    //         total_waiting_time += current_run_time - curt_pcb.arrival;
-    //         current_run_time += curt_pcb.remaining_burst_time;
-    //         total_completion_time += current_run_time;
-    //     } else {
-    //         uint32_t last_arrival;
-    //         for (size_t i = 0; i < total_pcb; i++) {
-    //             curt_pcb = *(ProcessControlBlock_t*)dyn_array_at(ready_queue, i);
-    //             if (curt_pcb.arrival <= current_run_time) {
-    //                 break;
-    //             }
-    //             last_arrival = curt_pcb.arrival;
-    //         }
-    //         total_waiting_time += current_run_time - curt_pcb.arrival;
+    uint32_t total_run_time = 0;
+    uint32_t total_completion_time = 0;
+    uint32_t total_waiting_time = 0;
 
-    //         uint32_t pcb_runtime =
+    dyn_array_sort(ready_queue, arrival_comparator);
 
-    //         virtual_cpu_time(&curt_pcb, curt_runtime);
-    //         total_run_time += curt_runtime;
+    // initial wait queue
+    offer_avaliable_pcb_and_sort_by_time(ready_queue, wait_queue, total_run_time);
 
-    //         curt_pcb.arrival = total_run_time;
+    // printf("finish offer - wait_queue\n");
+    // print_dyn_array(wait_queue);
+    // printf("finish offer - ready_queue\n");
+    // print_dyn_array(ready_queue);
+    // printf("-----------\n");
+    
 
-    //         if (curt_pcb.remaining_burst_time == 0) {
-    //             total_completion_time += total_run_time;
-    //         } else {
-    //             dyn_array_push_front(ready_queue, &curt_pcb);
-    //         }
-    //     }
-    //     // printf("current_waiting_time: %d\n", total_waiting_time);
-    //     // printf("current_complete_time: %d\n", total_completion_time);
-    //     // printf("current_run_time: %d\n", total_run_time);
-    // }
+    while (dyn_array_size(wait_queue) != 0) {
+        ProcessControlBlock_t curt_pcb;
+        dyn_array_extract_front(wait_queue, &curt_pcb);
 
-    // result->total_run_time = total_run_time;
-    // result->average_waiting_time = (float)total_waiting_time / total_pcb;
-    // result->average_turnaround_time = (float)total_completion_time / total_pcb;
+        total_waiting_time += total_run_time - curt_pcb.arrival;
+        
+        size_t ready_queue_size = dyn_array_size(ready_queue);
+        uint32_t curt_runtime;
+
+        if (ready_queue_size != 0) {
+            uint32_t next_arrival;
+            next_arrival = ((ProcessControlBlock_t*)dyn_array_at(ready_queue, dyn_array_size(ready_queue) - 1))->arrival;
+            curt_runtime = next_arrival - total_run_time;
+        } else {
+            curt_runtime  = curt_pcb.remaining_burst_time;
+        }
+        
+        total_run_time += curt_runtime;
+
+        while (curt_runtime > 0)
+        {
+            virtual_cpu(&curt_pcb);
+            curt_runtime--;
+        }
+        curt_pcb.arrival = total_run_time;
+        
+        if (curt_pcb.remaining_burst_time == 0) {
+            total_completion_time += total_run_time - curt_pcb.priority;
+        } else {
+            dyn_array_push_back(wait_queue, &curt_pcb);
+        }
+
+        offer_avaliable_pcb_and_sort_by_time(ready_queue, wait_queue, total_run_time);
+        
+        // printf("finish offer - wait_queue\n");
+        // print_dyn_array(wait_queue);
+        // printf("finish offer - ready_queue\n");
+        // print_dyn_array(ready_queue);
+        // printf("-----------\n");
+
+        // printf("current_waiting_time: %d\n", total_waiting_time);
+        // printf("current_complete_time: %d\n", total_completion_time);
+        // printf("current_run_time: %d\n", total_run_time);
+    }
+
+    result->total_run_time = total_run_time;
+    result->average_waiting_time = (float)total_waiting_time / total_pcb;
+    result->average_turnaround_time = (float)total_completion_time / total_pcb;
+
+    dyn_array_destroy(wait_queue);
 
     return true;
 }
