@@ -400,6 +400,33 @@ TEST (load_process_control_blocks, fullFoundFile) {
     score+=10;
 }
 
+// TEST (load_process_control_blocks, custom_load) {
+//     const char* fname = "../test/myPCBs.bin";
+//     uint32_t pcb_num = 5;
+//     uint32_t pcbs[5][3] = {{9,0,0}, {8,3,3}, {4,6,6}, {4,9,9}, {2,10,10}};
+
+//     mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
+//     int flags = O_CREAT | O_TRUNC | O_WRONLY;
+//     int fd = open(fname, flags, mode);
+//     write(fd,&pcb_num,sizeof(uint32_t));
+//     write(fd,pcbs,pcb_num * sizeof(uint32_t)*3);
+//     close(fd);
+    
+//     dyn_array_t* da = load_process_control_blocks(fname);
+//     ASSERT_NE(da, (dyn_array_t*) NULL);
+//     for (size_t i = 0; i < dyn_array_size(da); ++i) {
+//         ProcessControlBlock_t * pPCB = (ProcessControlBlock_t *)dyn_array_at(da, i);
+//         ASSERT_EQ(pPCB->remaining_burst_time, pcbs[i][0]);
+//         ASSERT_EQ(pPCB->priority, pcbs[i][1]);
+//         ASSERT_EQ(pPCB->arrival, pcbs[i][2]);
+//     }
+//     dyn_array_destroy(da);
+
+//     score+=10;
+// }
+
+
+
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

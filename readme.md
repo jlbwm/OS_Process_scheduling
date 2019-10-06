@@ -10,19 +10,28 @@ First Come, First Served - Sep 24
 
 Milestone 2: 
 Priority scheduling - Oct 2 
-Round Robin Oct - 2
+Round Robin - Oct 2
 shortest_job_first
-analysis of algorithms
+analysis of algorithms - Oct 2
+
+# Time Analysis
+Scheduling Algorithm: FCFS:
+- Average Turnaround Time: 192.766663
+- Average Waiting Time: 179.199997
+- Total Run Time: 407
+
+Scheduling Algorithm: P
+- Average Turnaround Time: 192.766663
+- Average Waiting Time: 179.199997
+- Total Run Time: 407
+
+Scheduling Algorithm: RR
+- Quantum: 4
+- Average Turnaround Time: 220.199997
+- Average Waiting Time: 206.633331
+- Total Run Time: 407
 
 
-Note: 
-1. After you run assignment3_test, the PCBs.bin will be created in the ./test directory.
-   so in the ./build directory, you can run the analysis program like "./analysis ../test/PCBs.bin RR 4"; or you can simply copy and paste the PCBs.bin to the ./build directory, and then run "./analysis PCBs.bin RR 4".
-     
-2. You can manually copy the time analysis from console and paste it to this readme file, but directly output from your program is strongly recommended.     
-    
-    ---
-    Add your scheduling algorithm analysis below this line in a readable format. 
 
 
 # CMAKE
